@@ -13,7 +13,7 @@ const MealDetailScreen = (props) => {
       <Text>Meal Detail Screen</Text>
       <Text>{selectedMeal.title}</Text>
       <Button
-        title="Go Back to Categories"
+      title="Go Back to Categories"
         onPress={() => {
           props.navigation.popToTop();
         }}

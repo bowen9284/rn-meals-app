@@ -1,12 +1,16 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const FiltersScreen = () => {
+const FiltersScreen = (props) => {
   return (
     <View style={styles.screen}>
       <Text>Filters Screen</Text>
     </View>
   );
+};
+
+FiltersScreen.navigationOptions = {
+  headerTitle: 'Filter Meals',
 };
 
 export default FiltersScreen;
