@@ -1,16 +1,10 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  ScrollView,
-  Image,
-} from 'react-native';
-import { MEALS } from '../data/dummy-data';
+import React, { useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
 import DefaultText from '../components/DefaultText';
+import { toggleFavorite } from '../store/actions/meals';
 
 const ListItem = (props) => {
   return (
@@ -21,7 +15,19 @@ const ListItem = (props) => {
 };
 const MealDetailScreen = (props) => {
   const mealId = props.navigation.getParam('mealId');
-  const selectedMeal = getSelectedMeal(mealId);
+
+  const availableMeals = useSelector((state) => state.meals.meals);
+  const selectedMeal = availableMeals.find((meal) => meal.id === mealId);
+
+  const dispatch = useDispatch();
+
+  const toggleFavoriteHandler = useCallback(() => {
+    dispatch(toggleFavorite(mealId));
+  }, [dispatch, mealId]);
+
+  useEffect(() => {
+    props.navigation.setParams({ toggleFavorite: toggleFavoriteHandler });
+  }, [toggleFavorite]);
 
   return (
     <ScrollView contentContainerStyle={styles.screen}>
@@ -43,19 +49,15 @@ const MealDetailScreen = (props) => {
   );
 };
 
-const getSelectedMeal = (mealId) => {
-  return MEALS.find((meal) => meal.id === mealId);
-};
-
 MealDetailScreen.navigationOptions = (navigationData) => {
-  const mealId = navigationData.navigation.getParam('mealId');
-  const selectedMeal = getSelectedMeal(mealId);
+  const selectedMealTitle = navigationData.navigation.getParam('mealTitle');
+  const toggle = navigationData.navigation.getParam('toggleFavorite');
 
   return {
-    headerTitle: selectedMeal.title,
+    headerTitle: selectedMealTitle,
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item title="Favorite" iconName="ios-star" onPress={() => {}} />
+        <Item title="Favorite" iconName="ios-star" onPress={toggle} />
       </HeaderButtons>
     ),
   };
@@ -70,7 +72,9 @@ const styles = StyleSheet.create({
   },
   details: {
     flexDirection: 'row',
-    padding: 15,
+    backgroundColor: '#ccc',
+    padding: 10,
+    marginBottom: 10,
     justifyContent: 'space-around',
   },
   title: {
