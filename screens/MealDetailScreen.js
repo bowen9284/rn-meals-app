@@ -20,7 +20,7 @@ const MealDetailScreen = (props) => {
   const selectedMeal = availableMeals.find((meal) => meal.id === mealId);
 
   const currentMealIsFavorite = useSelector((state) =>
-    state.meals.favoriteMeals.some((meal) => meal.id === meal.id)
+    state.meals.favoriteMeals.some((meal) => meal.id === mealId)
   );
 
   const dispatch = useDispatch();
